@@ -1,0 +1,9 @@
+html,
+body,
+#root {
+    min-height: 100vh;
+}
+
+.vh-full {
+    min-height: 100vh;
+}
