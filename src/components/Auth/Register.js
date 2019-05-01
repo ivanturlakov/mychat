@@ -170,7 +170,7 @@ class Register extends React.Component {
                                 <FormGroup>
                                     <Button 
                                         type="submit" 
-                                        className="btn-success btn-block" 
+                                        className="btn-info btn-block" 
                                         disabled={loading}
                                     >
                                         {loading ? <Spinner size="sm"/> : 'Submit'}

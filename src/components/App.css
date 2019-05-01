@@ -7,3 +7,9 @@ body,
 .vh-full {
     min-height: 100vh;
 }
+
+.colorPanel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
