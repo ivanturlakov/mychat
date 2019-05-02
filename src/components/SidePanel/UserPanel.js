@@ -8,9 +8,11 @@ class UserPanel extends React.Component {
     
         this.toggle = this.toggle.bind(this);
         this.state = {
-            dropdownOpen: false
+            dropdownOpen: false,
+            user: this.props.currentUser
         };
     }
+
     
     toggle() {
         this.setState(prevState => ({
@@ -26,19 +28,20 @@ class UserPanel extends React.Component {
       };
 
     render() {
+        const { user } = this.state;
+
         return (
-            <div>
-                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle} size="lg" color="light">
-                    <DropdownToggle className="btn-info" caret>
-                        UserName
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem header>Signed in as UserName</DropdownItem>
-                        <DropdownItem>Change Avatar</DropdownItem>
-                        <DropdownItem onClick={this.handleSignout}>Log Out</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </div>
+            <Dropdown className="mb-5" isOpen={this.state.dropdownOpen} toggle={this.toggle} size="lg" color="light">
+                <DropdownToggle className="btn-info" caret>
+                    <img src={user.photoURL} className="userPanelImg" alt="User Avatar" />
+                    {user.displayName}
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem header>Signed in as {this.state.user.displayName}</DropdownItem>
+                    <DropdownItem>Change Avatar</DropdownItem>
+                    <DropdownItem onClick={this.handleSignout}>Log Out</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
         )
     }
 }

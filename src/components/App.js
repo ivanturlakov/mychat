@@ -1,16 +1,17 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
 import './App.css';
+import { connect } from 'react-redux';
 
 import SidePanel from './SidePanel/SidePanel';
 import Messages from './Messages/Messages';
 import MetaPanel from './MetaPanel/MetaPanel';
 
-const App = () => (
+const App = ({ currentUser }) => (
     <div className="container-fluid">
         <Row>
             <Col className="col-md-3 vh-full bg-info text-light p-5">
-                <SidePanel />
+                <SidePanel currentUser={currentUser}/>
             </Col>
             <Col className="col-md-6 vh-full bg-light text-dark">
                 <Messages />
@@ -22,4 +23,8 @@ const App = () => (
     </div>
 )
 
-export default App;
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+})
+
+export default connect(mapStateToProps)(App);

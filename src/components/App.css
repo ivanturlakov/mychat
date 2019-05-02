@@ -13,3 +13,23 @@ body,
     bottom: 0;
     left: 0;
 }
+
+.userPanelImg {
+    width: 3rem;
+    height: auto;
+    margin-right: 1rem;
+    border-radius: 50%;
+}
+
+.addChannelBtn {
+    cursor: pointer;
+}
+
+.channels-list li {
+    cursor: pointer;
+}
+
+.channels-list li.active {
+    font-weight: bold;
+}
+
