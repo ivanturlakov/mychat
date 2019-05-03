@@ -27,12 +27,20 @@ class Channels extends React.Component {
         this.addListeners();
     }
 
+    componentWillUnmount() {
+        this.removeListeners();
+    }
+
     addListeners = () => {
         let loadedChannels = [];
         this.state.channelsRef.on('child_added', snap => {
             loadedChannels.push(snap.val());
             this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
         })
+    }
+
+    removeListeners = () => {
+        this.state.channelsRef.off();
     }
 
     setFirstChannel = () => {
@@ -126,9 +134,6 @@ class Channels extends React.Component {
                     <MdDvr /> CHANNELS({ channels.length }) <span className="addChannelBtn float-right" onClick={this.toggle}><MdAddCircleOutline /></span>
                 </h5>
                 <ListGroup className="bg-info text-white channels-list">
-                    {/* <ListGroupItem className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center">Cras justo odio <Badge pill>14</Badge></ListGroupItem>
-                    <ListGroupItem className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center">Dapibus ac facilisis in <Badge pill>2</Badge></ListGroupItem>
-                    <ListGroupItem className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center">Morbi leo risus <Badge pill>1</Badge></ListGroupItem> */}
                     {this.displayChannels(channels)}
                 </ListGroup>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>

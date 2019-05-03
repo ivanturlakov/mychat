@@ -14,6 +14,22 @@ body,
     left: 0;
 }
 
+.addColorSchema, .colorSchema li {
+    display: inline-block;
+    font-size: 1em;
+    padding: 1em 0;
+    width: 3.5em;
+    text-align: center;
+    cursor: pointer;
+}
+
+.colorSchema {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+}
+
 .userPanelImg {
     width: 3rem;
     height: auto;
@@ -33,3 +49,60 @@ body,
     font-weight: bold;
 }
 
+.messagesForm {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.messagesForm textarea {
+    resize:none;
+}
+
+.messagesArea {
+    overflow-y: scroll;
+    height: 60vh;
+    padding-right: 2em;
+    position: relative;
+}
+
+.ownMessage {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.ownMessage img, .ownMessage .userName {
+    display: none;
+}
+
+.messagesArea .media {
+    margin-bottom: 3rem;
+}
+
+.messagesArea .media img {
+    width: 3rem;
+    height: auto;
+    border-radius: 50%;
+}
+
+.messagesArea h4 {
+    font-size: 1rem;
+}
+
+.messagesArea .media-body {
+    width: auto;
+    max-width: 50%;
+    flex: none;
+    background-color: rgb(235, 235, 235);
+    padding: 0.7rem 1rem;
+    border-radius: 1rem;
+}
+
+.messagesArea .ownMessage .media-body {
+    background-color: #dff8fc;
+}
+
+.messagesArea .timeStamp {
+    color: rgb(182, 182, 182);
+}
