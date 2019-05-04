@@ -99,10 +99,33 @@ body,
     border-radius: 1rem;
 }
 
+.messagesArea .media-body img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0.7rem;
+    margin: 0.4rem 0 0;
+    padding: 0;
+}
+
 .messagesArea .ownMessage .media-body {
     background-color: #dff8fc;
 }
 
 .messagesArea .timeStamp {
     color: rgb(182, 182, 182);
+}
+
+.messagesForm .fileUpload {
+    float: right;
+    position: relative;
+}
+
+.messagesForm .fileUpload .custom-file {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
 }

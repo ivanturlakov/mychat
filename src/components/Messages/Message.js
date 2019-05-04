@@ -6,6 +6,10 @@ const isOwnMessage = (message, user) => {
     return message.user.id === user.uid ? 'ownMessage' : '';
 }
 
+const isImage = (message) => {
+    return message.hasOwnProperty('image') && !message.hasOwnProperty('content')
+}
+
 const timeFromNow = timestamp => moment(timestamp).fromNow();
 
 const Message = ({ message, user }) => (
@@ -15,7 +19,12 @@ const Message = ({ message, user }) => (
             <Media className="userName" heading>
                 {message.user.name}
             </Media>
-            {message.content} <br />
+            
+            {isImage(message) ? 
+                <img src={message.image} alt="File"/> 
+                : <span>{message.content}</span> 
+            }
+            <br />
             <small className="timeStamp">{timeFromNow(message.timestamp)}</small>
         </Media>
     </Media>
