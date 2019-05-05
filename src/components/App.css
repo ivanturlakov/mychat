@@ -129,3 +129,7 @@ body,
     opacity: 0;
     cursor: pointer;
 }
+
+.progress {
+    height: 3px !important;
+}

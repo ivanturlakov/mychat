@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from '../../firebase';
 import mime from 'mime-types';
 import uuidv4 from 'uuid/v4';
-import { Button, Input, CustomInput } from 'reactstrap';
+import { Button, Input, CustomInput, Spinner } from 'reactstrap';
 import { MdAdd, MdSend, MdAttachFile } from "react-icons/md";
 
 class MessageForm extends React.Component {
@@ -143,7 +143,7 @@ class MessageForm extends React.Component {
     }
 
     render() {
-        const { errors, message, loading } = this.state;
+        const { errors, message, loading, uploadState } = this.state;
 
         return (
             <div className="messagesForm p-5">
@@ -173,9 +173,14 @@ class MessageForm extends React.Component {
                     onClick={this.sendMessage}
                 >Send <MdSend /></Button>
                 <span className="fileUpload">
+                    {(uploadState === 'uploading')
+                        ? <Spinner className="align-middle mr-3" color="info"/>
+                        : ''
+                    }
                     <Button 
                         color="secondary" 
                         size="lg"
+                        disabled={uploadState === 'uploading'}
                     ><MdAttachFile /> Attach File
                     </Button>
                     <CustomInput 
@@ -183,6 +188,7 @@ class MessageForm extends React.Component {
                         id="fileInput" 
                         name="file" 
                         onChange={this.sendFile}
+                        disabled={uploadState === 'uploading'}
                     />
                 </span>
             </div>

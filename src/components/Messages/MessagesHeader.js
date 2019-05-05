@@ -4,6 +4,8 @@ import { MdStarBorder, MdStar, MdSearch } from "react-icons/md";
 
 class MessagesHeader extends React.Component {
     render() {
+        const { handleSearchChange, channelName, numUniqueUsers } = this.props;
+
         return (
             <div className="mb-5">
                 <span className="float-right">
@@ -11,11 +13,16 @@ class MessagesHeader extends React.Component {
                         <div className="input-group-prepend">
                             <div className="input-group-text"><MdSearch /></div>
                         </div>
-                        <Input type="text" name="search" placeholder="Search messages..." />
+                        <Input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Search messages..."
+                            onChange={handleSearchChange} 
+                        />
                     </div>
                 </span>
-                <h3>Channel <MdStarBorder /> <MdStar /></h3>
-                <p><Badge color="secondary">3</Badge> Users</p>
+                <h3>{channelName} <MdStarBorder /> <MdStar /></h3>
+                <p><Badge color="secondary">{numUniqueUsers}</Badge></p>
             </div>
         )
     }
