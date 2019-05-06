@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from '../../firebase';
 import { connect } from 'react-redux';
-import { setCurrentChannel } from '../../actions';
+import { setCurrentChannel, setPrivateChannel } from '../../actions';
 import { ListGroup, ListGroupItem, Badge, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Input } from 'reactstrap';
 import { MdAddCircleOutline } from "react-icons/md";
 import { MdDvr } from "react-icons/md";
@@ -79,6 +79,7 @@ class Channels extends React.Component {
     changeChannel = channel => {
         this.setActiveChannel(channel);
         this.props.setCurrentChannel(channel);
+        this.props.setPrivateChannel(false);
     }
     
     setActiveChannel = channel => {
@@ -170,5 +171,5 @@ class Channels extends React.Component {
 
 export default connect(
     null, 
-    { setCurrentChannel }
+    { setCurrentChannel, setPrivateChannel }
 )(Channels);

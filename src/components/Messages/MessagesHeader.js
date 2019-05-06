@@ -4,7 +4,12 @@ import { MdStarBorder, MdStar, MdSearch } from "react-icons/md";
 
 class MessagesHeader extends React.Component {
     render() {
-        const { handleSearchChange, channelName, numUniqueUsers } = this.props;
+        const { 
+            handleSearchChange, 
+            channelName, 
+            numUniqueUsers, 
+            isPrivateChannel 
+        } = this.props;
 
         return (
             <div className="mb-5">
@@ -21,7 +26,10 @@ class MessagesHeader extends React.Component {
                         />
                     </div>
                 </span>
-                <h3>{channelName} <MdStarBorder /> <MdStar /></h3>
+                <h3>
+                    {channelName} 
+                    {!isPrivateChannel && <MdStarBorder />}
+                </h3>
                 <p><Badge color="secondary">{numUniqueUsers}</Badge></p>
             </div>
         )
