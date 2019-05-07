@@ -12,10 +12,13 @@ class Channels extends React.Component {
         this.state = {
             user: this.props.currentUser,
             activeChannel: '',
+            channel: null,
             channels: [],
             channelName: '',
             channelDetails: '',
             channelsRef: firebase.database().ref('channels'),
+            messagesRef: firebase.database().ref('messages'),
+            notifications: [],
             modal: false,
             firstLoad: true
         };
@@ -36,7 +39,40 @@ class Channels extends React.Component {
         this.state.channelsRef.on('child_added', snap => {
             loadedChannels.push(snap.val());
             this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
+            this.addNotificationListener(snap.key);
         })
+    }
+
+    addNotificationListener = channelId => {
+        this.state.messagesRef.child(channelId).on('value',  snap => {
+            if(this.state.channel) {
+                this.handleNotifications(channelId, this.state.channel.id, this.state.notifications, snap);
+            }
+        })
+    }
+
+    handleNotifications = (channelId, currentChannelId, notifications, snap) => {
+        let lastTotal = 0;
+        let index = notifications.findIndex(notification => notification.id === channelId );
+
+        if(index !== -1) {
+            if(channelId !== currentChannelId) {
+                lastTotal = notifications[index].total;
+
+                if(snap.numChildren() - lastTotal > 0) {
+                    notifications[index].count = snap.numChildren() - lastTotal;
+                }
+            }
+            notifications[index].lastKnownTotal = snap.numChildren();
+        } else {
+            notifications.push({
+                id: channelId,
+                total: snap.numChildren(),
+                lastKnownTotal: snap.numChildren(),
+                count: 0,
+            })
+        }
+        this.setState({ notifications });
     }
 
     removeListeners = () => {
@@ -48,6 +84,7 @@ class Channels extends React.Component {
         if(this.state.firstLoad && this.state.channels.length > 0) {
             this.props.setCurrentChannel(firstChannel);
             this.setActiveChannel(firstChannel);
+            this.setState({ channel: firstChannel });
         }
         this.setState({ firstLoad: false })
     }
@@ -72,14 +109,42 @@ class Channels extends React.Component {
                 className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center"
                 active={this.state.activeChannel === channel.id}
             >
-                # {channel.name} <Badge pill>14</Badge>
+                # {channel.name}
+                {this.getNotificationCount(channel) && (
+                    <Badge pill>{this.getNotificationCount(channel)}</Badge>
+                )}
             </ListGroupItem>
-        ))
+        ));
+
+    getNotificationCount = channel => {
+        let count = 0;
+
+        this.state.notifications.forEach(notification => {
+            if(notification.id === channel.id) {
+                count = notification.count;
+            }
+        });
+
+        if(count > 0) return count;
+    }
 
     changeChannel = channel => {
         this.setActiveChannel(channel);
+        this.clearNotifications();
         this.props.setCurrentChannel(channel);
         this.props.setPrivateChannel(false);
+        this.setState({ channel });
+    }
+
+    clearNotifications = () => {
+        let index = this.state.notifications.findIndex(notification => notification.id === this.state.channel.id);
+
+        if(index !== -1) {
+            let updatedNotifications = [...this.state.notifications];
+            updatedNotifications[index].total = this.state.notifications[index].lastKnownTotal;
+            updatedNotifications[index].count = 0;
+            this.setState({ notification: updatedNotifications });
+        }
     }
     
     setActiveChannel = channel => {
@@ -131,7 +196,7 @@ class Channels extends React.Component {
 
         return (
             <React.Fragment>
-                <h5>
+                <h5 className="mt-5">
                     <MdDvr /> CHANNELS({ channels.length }) <span className="addChannelBtn float-right" onClick={this.toggle}><MdAddCircleOutline /></span>
                 </h5>
                 <ListGroup className="bg-info text-white channels-list">

@@ -8,7 +8,9 @@ class MessagesHeader extends React.Component {
             handleSearchChange, 
             channelName, 
             numUniqueUsers, 
-            isPrivateChannel 
+            isPrivateChannel,
+            handleStar,
+            isChannelStarred 
         } = this.props;
 
         return (
@@ -26,9 +28,17 @@ class MessagesHeader extends React.Component {
                         />
                     </div>
                 </span>
-                <h3>
-                    {channelName} 
-                    {!isPrivateChannel && <MdStarBorder />}
+                <h3 className="align-middle">
+                    {channelName} {!isPrivateChannel && (
+                        <span 
+                            onClick={handleStar}
+                            className={
+                                isChannelStarred ? 'text-info' : ' '
+                            }
+                        >
+                            {isChannelStarred ? <MdStar /> : <MdStarBorder />}
+                        </span>
+                    )}
                 </h3>
                 <p><Badge color="secondary">{numUniqueUsers}</Badge></p>
             </div>

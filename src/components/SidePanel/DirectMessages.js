@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from '../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from '../../actions';
-import { ListGroup, ListGroupItem, Badge, Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormGroup, Input } from 'reactstrap';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import { MdAddCircleOutline } from "react-icons/md";
 import { MdMailOutline, MdFiberManualRecord } from "react-icons/md";
 
