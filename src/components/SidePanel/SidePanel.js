@@ -5,7 +5,7 @@ import UserPanel from './UserPanel';
 import Channels from './Channels';
 import Starred from './Starred';
 import DirectMessages from './DirectMessages';
-import ColorPanel from '../ColorPanel/ColorPanel';
+// import ColorPanel from '../ColorPanel/ColorPanel';
 
 class SidePanel extends React.Component {
     render() {
@@ -18,7 +18,7 @@ class SidePanel extends React.Component {
                 <Starred currentUser={currentUser} />
                 <Channels currentUser={currentUser} />
                 <DirectMessages currentUser={currentUser} />
-                <ColorPanel />
+                {/* <ColorPanel /> */}
             </div>
         )
     }

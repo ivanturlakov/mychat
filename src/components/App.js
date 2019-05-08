@@ -7,7 +7,7 @@ import SidePanel from './SidePanel/SidePanel';
 import Messages from './Messages/Messages';
 import MetaPanel from './MetaPanel/MetaPanel';
 
-const App = ({ currentUser, currentChannel, isPrivateChannel }) => (
+const App = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => (
     <div className="container-fluid">
         <Row>
             <Col className="col-md-3 vh-full bg-info text-light p-5">
@@ -25,7 +25,12 @@ const App = ({ currentUser, currentChannel, isPrivateChannel }) => (
                 />
             </Col>
             <Col className="col-md-3 vh-full bg-secondary text-light p-5">
-                <MetaPanel />
+                <MetaPanel 
+                    key={currentChannel && currentChannel.id}
+                    currentChannel={currentChannel}
+                    isPrivateChannel={isPrivateChannel}
+                    userPosts={userPosts} 
+                />
             </Col>
         </Row>
     </div>
@@ -34,7 +39,8 @@ const App = ({ currentUser, currentChannel, isPrivateChannel }) => (
 const mapStateToProps = state => ({
     currentUser: state.user.currentUser,
     currentChannel: state.channel.currentChannel,
-    isPrivateChannel: state.channel.isPrivateChannel
+    isPrivateChannel: state.channel.isPrivateChannel,
+    userPosts: state.channel.userPosts,
 })
 
 export default connect(mapStateToProps)(App);

@@ -3,7 +3,6 @@ import firebase from '../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from '../../actions';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { MdAddCircleOutline } from "react-icons/md";
 import { MdMailOutline, MdFiberManualRecord } from "react-icons/md";
 
 class DirectMessages extends React.Component {
@@ -98,7 +97,7 @@ class DirectMessages extends React.Component {
         return (
             <React.Fragment>
                 <h5 className="mt-5">
-                    <MdMailOutline /> MESSAGES({ users.length }) <span className="addChannelBtn float-right"><MdAddCircleOutline /></span>
+                    <MdMailOutline /> MESSAGES({ users.length })
                 </h5>
                 <ListGroup className="bg-info text-white channels-list">
                     {users.map(user => (
@@ -112,33 +111,6 @@ class DirectMessages extends React.Component {
                         </ListGroupItem>
                     ))}
                 </ListGroup>
-                {/* <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-                    <ModalHeader toggle={this.toggle}>Add a Channel</ModalHeader>
-                    <Form onSubmit={this.handleSubmit}>
-                        <ModalBody>
-                            <FormGroup>
-                                <Input 
-                                    type="text" 
-                                    name="channelName" 
-                                    placeholder="Name of Channel"
-                                    onChange={this.handleChange} 
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Input 
-                                    type="text" 
-                                    name="channelDetails"
-                                    placeholder="About the Channel"
-                                    onChange={this.handleChange} 
-                                />
-                            </FormGroup>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="info" onClick={this.handleSubmit}>Add</Button>
-                            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                        </ModalFooter>
-                    </Form>
-                </Modal> */}
             </React.Fragment>
 
         )
