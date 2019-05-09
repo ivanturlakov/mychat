@@ -52,8 +52,8 @@ const channel_reducer = (state = initialChannelState, action) => {
 };
 
 const initialColorsState = {
-    primaryColor: "#4c3c4c",
-    secondaryColor: "#eee"
+    primaryColor: "#17a2b8",
+    secondaryColor: "#6c757d"
 };
 
 const colors_reducer = (state = initialColorsState, action) => {

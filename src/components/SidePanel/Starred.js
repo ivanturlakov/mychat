@@ -60,7 +60,7 @@ class Starred extends React.Component {
                 key={channel.id}
                 onClick={() => this.changeChannel(channel)}
                 name={channel.name}
-                className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center"
+                className="border-0 bg-transparent list-group-item d-flex justify-content-between align-items-center"
                 active={this.state.activeChannel === channel.id}
             >
                 # {channel.name}
@@ -75,7 +75,7 @@ class Starred extends React.Component {
                 <h5>
                     <MdStarBorder /> STARRED({ starredChannels.length })
                 </h5>
-                <ListGroup className="bg-info text-white channels-list">
+                <ListGroup className="bg-transparent text-white channels-list">
                     {this.displayChannels(starredChannels)}
                 </ListGroup>
             </React.Fragment>

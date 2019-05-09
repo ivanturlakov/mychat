@@ -106,7 +106,7 @@ class Channels extends React.Component {
                 key={channel.id}
                 onClick={() => this.changeChannel(channel)}
                 name={channel.name}
-                className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center"
+                className="border-0 bg-transparent list-group-item d-flex justify-content-between align-items-center"
                 active={this.state.activeChannel === channel.id}
             >
                 # {channel.name}
@@ -199,7 +199,7 @@ class Channels extends React.Component {
                 <h5 className="mt-5">
                     <MdDvr /> CHANNELS({ channels.length }) <span className="addChannelBtn float-right" onClick={this.toggle}><MdAddCircleOutline /></span>
                 </h5>
-                <ListGroup className="bg-info text-white channels-list">
+                <ListGroup className="bg-transparent text-white channels-list">
                     {this.displayChannels(channels)}
                 </ListGroup>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>

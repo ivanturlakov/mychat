@@ -15,12 +15,27 @@ body,
 }
 
 .addColorSchema, .colorSchema li {
+    content: '';
     display: inline-block;
-    font-size: 1em;
-    padding: 1em 0;
-    width: 3.5em;
+    width: 56px;
+    height: 56px;
+    vertical-align: middle;
     text-align: center;
     cursor: pointer;
+    overflow: hidden;
+}
+
+.addColorSchema svg {
+    display: block;
+    width: 56px;
+    height: 56px;
+}
+
+.colorSchema li span {
+    display: block;
+    width: 134px;
+    height: 56px;
+    transform: rotate(225deg);
 }
 
 .colorSchema {
@@ -138,6 +153,10 @@ body,
 .topPosters {
     list-style: none;
     padding-left: 0;
+}
+
+.modal-body .circle-picker {
+    width: 100% !important;
 }
 
 

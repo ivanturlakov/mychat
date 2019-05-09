@@ -99,13 +99,13 @@ class DirectMessages extends React.Component {
                 <h5 className="mt-5">
                     <MdMailOutline /> MESSAGES({ users.length })
                 </h5>
-                <ListGroup className="bg-info text-white channels-list">
+                <ListGroup className="bg-transparent text-white channels-list">
                     {users.map(user => (
                         <ListGroupItem 
                             key={user.uid}
                             onClick={() => this.changeChannel(user)}
                             active={user.uid === activeChannel}
-                            className="border-0 bg-info list-group-item d-flex justify-content-between align-items-center"
+                            className="border-0 bg-transparent list-group-item d-flex justify-content-between align-items-center"
                         >
                             @ {user.name} {this.isUserOnline(user) ? <MdFiberManualRecord /> : ''}
                         </ListGroupItem>

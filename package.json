@@ -10,6 +10,8 @@
     "mime-types": "^2.1.24",
     "moment": "^2.24.0",
     "react": "^16.8.6",
+    "react-avatar-editor": "^11.0.7",
+    "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
     "react-icons": "^3.6.1",
     "react-redux": "^7.0.3",
