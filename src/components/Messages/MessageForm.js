@@ -3,11 +3,14 @@ import firebase from '../../firebase';
 import mime from 'mime-types';
 import uuidv4 from 'uuid/v4';
 import { Button, Input, CustomInput, Spinner } from 'reactstrap';
-import { MdAdd, MdSend, MdAttachFile } from "react-icons/md";
+import { MdTagFaces, MdSend, MdAttachFile } from "react-icons/md";
+import { Picker, emojiIndex } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css';
 
 class MessageForm extends React.Component {
     state = {
         storageRef: firebase.storage().ref(),
+        typingRef: firebase.database().ref('typing'),
         uploadState: '',
         uploadTask: null,
         percentUploaded: 0,
@@ -17,7 +20,8 @@ class MessageForm extends React.Component {
         loading: false,
         errors: [],
         file: null,
-        authorized: ['image/jpeg', 'image/png']
+        authorized: ['image/jpeg', 'image/png'],
+        emojiPicker: false
     }
 
     createMessage = (fileUrl = null) => {
@@ -123,9 +127,50 @@ class MessageForm extends React.Component {
         this.setState({ [event.target.name]: event.target.value })
     }
 
+    handleKeyDown = () => {
+        const { message, typingRef, user, channel } = this.state;
+
+        if(message) {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .set(user.displayName);
+        } else {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .remove();
+        }
+    }
+
+    handleTogglePicker = () => {
+        this.setState({ emojiPicker: !this.state.emojiPicker })
+    };
+
+    handleAddEmoji = emoji => {
+        const oldMessage = this.state.message;
+        const newMessage = this.colonToUnicode(`${oldMessage} ${emoji.colons}`);
+        this.setState({ message: newMessage, emojiPicker: false })
+    };
+
+    colonToUnicode = message => {
+            return message.replace(/:[A-Za-z0-9_+-]+:/g, x => {
+            x = x.replace(/:/g, "");
+            let emoji = emojiIndex.emojis[x];
+            if (typeof emoji !== "undefined") {
+                let unicode = emoji.native;
+                if (typeof unicode !== "undefined") {
+                return unicode;
+                }
+            }
+            x = ":" + x + ":";
+            return x;
+        });
+    };
+
     sendMessage = () => {
         const { getMessagesRef } = this.props;
-        const { message, channel } = this.state;
+        const { message, channel, typingRef, user } = this.state;
 
         if(message) {
             this.setState({ loading: true });
@@ -134,7 +179,11 @@ class MessageForm extends React.Component {
                 .push()
                 .set(this.createMessage())
                 .then(() => {
-                    this.setState({ loading: false, message: '', errors: [] })
+                    this.setState({ loading: false, message: '', errors: [] });
+                    typingRef
+                        .child(channel.id)
+                        .child(user.uid)
+                        .remove();
                 })
                 .catch(err => {
                     console.error(err);
@@ -151,13 +200,22 @@ class MessageForm extends React.Component {
     }
 
     render() {
-        const { errors, message, loading, uploadState } = this.state;
+        const { errors, message, loading, uploadState, emojiPicker } = this.state;
 
         return (
             <div className="messagesForm p-5">
+                {emojiPicker && (
+                    <Picker
+                        set="apple"
+                        className="emojipicker"
+                        title="Pick your emoji!"
+                        emoji="point_up"
+                        onSelect={this.handleAddEmoji}
+                    />
+                )}
                 <div className="input-group mb-2">
-                    <div className="input-group-prepend">
-                        <div className="input-group-text"><MdAdd /></div>
+                    <div className="input-group-prepend" onClick={this.handleTogglePicker}>
+                        <div className="input-group-text"><MdTagFaces /></div>
                     </div>
                     <Input 
                         type="textarea" 
@@ -171,7 +229,8 @@ class MessageForm extends React.Component {
                             ? "is-invalid"
                             : ""
                         }
-                        onChange={this.handleChange} 
+                        onChange={this.handleChange}
+                        onKeyDown={this.handleKeyDown} 
                     />
                 </div>
                 <div className="clearfix"></div>

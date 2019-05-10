@@ -5,6 +5,8 @@ import { setUserPosts } from '../../actions';
 import MessagesHeader from './MessagesHeader';
 import MessageForm from './MessageForm';
 import Message from './Message';
+import Typing from './Typing';
+import Skeleton from './Skeleton';
 
 class Messages extends React.Component {
     state = {
@@ -20,6 +22,9 @@ class Messages extends React.Component {
         numUniqueUsers: '',
         searchTerm: '',
         searchResults: [],
+        typingRef: firebase.database().ref('typing'),
+        typingUsers: [],
+        connectedRef: firebase.database().ref('.info/connected')
     };
 
     componentDidMount() {
@@ -31,9 +36,55 @@ class Messages extends React.Component {
         }
     };
 
+    componentDidUpdate(prevProps, prevState) {
+        if(this.messagesEnd) {
+            this.scrollToBottom();
+        }
+    };
+
+    scrollToBottom = () => {
+        this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
+    };
+
     addListeners = channelId => {
         this.addMessageListener(channelId);
+        this.addTypingListeners(channelId);
     };
+
+    addTypingListeners = channelId => {
+        let typingUsers = [];
+        this.state.typingRef.child(channelId).on('child_added', snap => {
+            if(snap.key !== this.state.user.uid) {
+                typingUsers = typingUsers.concat({
+                    id: snap.key,
+                    name: snap.val()
+                })
+                this.setState({ typingUsers })
+            }
+        });
+
+        this.state.typingRef.child(channelId).on('child_removed', snap => {
+            const index = typingUsers.findIndex(user => user.id === snap.key);
+            if(index !== -1) {
+                typingUsers = typingUsers.filter(user => user.id !== snap.key);
+                this.setState({ typingUsers })
+            }
+        });
+
+        this.state.connectedRef.on('value', snap => {
+            if(snap.val() === true) {
+                this.state.typingRef
+                    .child(channelId)
+                    .child(this.state.user.uid)
+                    .onDisconnect()
+                    .remove(err => {
+                        if(err !== null) {
+                            console.error(err);
+                        }
+                    })
+            }
+        })
+    }
 
     addMessageListener = channelId => {
         const loadedMessages = [];
@@ -162,6 +213,24 @@ class Messages extends React.Component {
         return channel ? `${this.state.privateChannel ? '@' : '#'}${channel.name}` : '';
     };
 
+    displayTypingUsers = users => (
+        users.length > 0 && users.map(user => (
+            <div key={user.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.3em' }}>
+                <em>{user.name} typing...  </em> <Typing />
+            </div>
+        ))
+    );
+
+    displayMessagesSkeleton = loading => (
+        loading ? (
+            <React.Fragment>
+                {[...Array(10)].map((_, i) => (
+                    <Skeleton key={i} />
+                ))}
+            </React.Fragment>
+        ) : null
+    );
+
     render() {
         const { 
             messagesRef, 
@@ -172,7 +241,9 @@ class Messages extends React.Component {
             searchTerm, 
             searchResults, 
             privateChannel,
-            isChannelStarred 
+            isChannelStarred,
+            typingUsers,
+            messagesLoading 
         } = this.state;
 
         return (
@@ -186,7 +257,10 @@ class Messages extends React.Component {
                     isChannelStarred={isChannelStarred}
                 />
                 <div className="messagesArea">
+                    {this.displayMessagesSkeleton(messagesLoading)}
                     {searchTerm ?  this.displayMessages(searchResults) : this.displayMessages(messages)}
+                    {this.displayTypingUsers(typingUsers)}
+                    <div ref={node => (this.messagesEnd = node)}></div>
                 </div>
                 <MessageForm 
                     messagesRef={messagesRef}
