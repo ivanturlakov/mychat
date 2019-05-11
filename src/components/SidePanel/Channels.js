@@ -25,15 +25,15 @@ class Channels extends React.Component {
         };
     
         this.toggle = this.toggle.bind(this);
-    }
+    };
 
     componentDidMount() {
         this.addListeners();
-    }
+    };
 
     componentWillUnmount() {
         this.removeListeners();
-    }
+    };
 
     addListeners = () => {
         let loadedChannels = [];
@@ -42,7 +42,7 @@ class Channels extends React.Component {
             this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
             this.addNotificationListener(snap.key);
         })
-    }
+    };
 
     addNotificationListener = channelId => {
         this.state.messagesRef.child(channelId).on('value',  snap => {
@@ -50,7 +50,7 @@ class Channels extends React.Component {
                 this.handleNotifications(channelId, this.state.channel.id, this.state.notifications, snap);
             }
         })
-    }
+    };
 
     handleNotifications = (channelId, currentChannelId, notifications, snap) => {
         let lastTotal = 0;
@@ -74,11 +74,14 @@ class Channels extends React.Component {
             })
         }
         this.setState({ notifications });
-    }
+    };
 
     removeListeners = () => {
         this.state.channelsRef.off();
-    }
+        this.state.channels.forEach(channel => {
+            this.state.messagesRef.child(channel.id).off();
+        })
+    };
 
     setFirstChannel = () => {
         const firstChannel = this.state.channels[0];
@@ -88,17 +91,17 @@ class Channels extends React.Component {
             this.setState({ channel: firstChannel });
         }
         this.setState({ firstLoad: false })
-    }
+    };
     
     toggle() {
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
-    }
+    };
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value })
-    }
+    };
 
     displayChannels = channels => 
         channels.length > 0 && 
@@ -127,7 +130,7 @@ class Channels extends React.Component {
         });
 
         if(count > 0) return count;
-    }
+    };
 
     changeChannel = channel => {
         this.setActiveChannel(channel);
@@ -139,7 +142,7 @@ class Channels extends React.Component {
         this.props.setCurrentChannel(channel);
         this.props.setPrivateChannel(false);
         this.setState({ channel });
-    }
+    };
 
     clearNotifications = () => {
         let index = this.state.notifications.findIndex(notification => notification.id === this.state.channel.id);
@@ -150,11 +153,11 @@ class Channels extends React.Component {
             updatedNotifications[index].count = 0;
             this.setState({ notification: updatedNotifications });
         }
-    }
+    };
     
     setActiveChannel = channel => {
         this.setState({ activeChannel: channel.id });
-    }
+    };
 
     addChannel = () => {
         const { channelsRef, channelName, channelDetails, user } = this.state;
@@ -184,7 +187,7 @@ class Channels extends React.Component {
                 console.log(err)
             })
 
-    }
+    };
 
     handleSubmit = event => {
         event.preventDefault();
@@ -192,7 +195,7 @@ class Channels extends React.Component {
             this.addChannel();
         }
         
-    }
+    };
 
     isFormValid = ({ channelName, channelDetails }) => channelName && channelDetails;
 

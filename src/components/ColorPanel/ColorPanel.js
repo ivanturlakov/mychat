@@ -19,13 +19,21 @@ class ColorPanel extends React.Component {
         };
     
         this.toggle = this.toggle.bind(this);
-    }
+    };
 
     componentDidMount() {
         if(this.state.user) {
             this.addListener(this.state.user.uid);
         }
-    }
+    };
+
+    componentWillUnmount() {
+        this.removeListener();
+    };
+
+    removeListener = () => {
+        this.state.usersRef.child(`${this.state.user.uid}/colors`).off();
+    };
 
     addListener = userId => {
         let userColors = [];
@@ -33,7 +41,7 @@ class ColorPanel extends React.Component {
             userColors.unshift(snap.val());
             this.setState({ userColors });
         })
-    }
+    };
 
     handleChangePrimary = color => this.setState({ primary: color.hex });
 
@@ -43,7 +51,7 @@ class ColorPanel extends React.Component {
         if(this.state.primary && this.state.secondary) {
             this.saveColors(this.state.primary, this.state.secondary);
         }
-    }
+    };
 
     saveColors = (primary, secondary) => {
         this.state.usersRef
@@ -58,7 +66,7 @@ class ColorPanel extends React.Component {
                 this.toggle();
             })
             .catch(err => console.error(err));
-    }
+    };
 
     displayUserColors = colors => (
         colors.length > 0 && colors.map((color, i) => (
@@ -70,13 +78,13 @@ class ColorPanel extends React.Component {
                 <span style={{ backgroundColor: color.secondary }}></span>
             </li>
         ))
-    )
+    );
     
     toggle() {
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
-    }
+    };
     
     render() {
 

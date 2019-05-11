@@ -12,13 +12,21 @@ class Starred extends React.Component {
         usersRef: firebase.database().ref('users'),
         starredChannels: [],
         activeChannel: '',
-    }
+    };
 
     componentDidMount() {
         if(this.state.user) {
             this.addListeners(this.state.user.uid);
         }
-    }
+    };
+
+    componentWillUnmount() {
+        this.removeListener();
+    };
+
+    removeListener = () => {
+        this.state.usersRef.child(`${this.state.user.uid}/starred`).off();
+    };
 
     addListeners = (userId) => {
         this.state.usersRef
@@ -41,17 +49,17 @@ class Starred extends React.Component {
                 });
                 this.setState({ starredChannels: filteredChannels });
             })    
-    }
+    };
 
     setActiveChannel = channel => {
         this.setState({ activeChannel: channel.id });
-    }
+    };
 
     changeChannel = channel => {
         this.setActiveChannel(channel);
         this.props.setCurrentChannel(channel);
         this.props.setPrivateChannel(false);
-    }
+    };
 
     displayChannels = starredChannels => 
         starredChannels.length > 0 && 

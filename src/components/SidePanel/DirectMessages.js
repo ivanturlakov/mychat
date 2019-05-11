@@ -13,13 +13,23 @@ class DirectMessages extends React.Component {
         usersRef: firebase.database().ref('users'),
         connectedRef: firebase.database().ref('.info/connected'),
         presenceRef: firebase.database().ref('presence'),
-    }
+    };
 
     componentDidMount() {
         if(this.state.user) {
             this.addListeners(this.state.user.uid)
         }
-    }
+    };
+
+    componentWillUnmount() {
+        this.removeListeners();
+    };
+
+    removeListeners = () => {
+        this.state.usersRef.off();
+        this.state.presenceRef.off();
+        this.state.connectedRef.off();
+    };
 
     addListeners = currentUserUid => {
         let loadedUsers = [];
@@ -56,7 +66,7 @@ class DirectMessages extends React.Component {
                 this.addStatusToUser(snap.key, false)
             }
         });
-    }
+    };
 
     addStatusToUser = (userId, connected = true) => {
         const updatedUsers = this.state.users.reduce((acc, user) => {
@@ -66,7 +76,7 @@ class DirectMessages extends React.Component {
             return acc.concat(user);
         }, []);
         this.setState({ users: updatedUsers })
-    }
+    };
 
     isUserOnline = (user) => user.status === 'online';
 
@@ -79,17 +89,17 @@ class DirectMessages extends React.Component {
         this.props.setCurrentChannel(channelData);
         this.props.setPrivateChannel(true);
         this.setActiveChannel(user.uid);
-    }
+    };
 
     setActiveChannel = userId => {
         this.setState({ activeChannel: userId });
-    }
+    };
 
     getChannelId = userId => {
         const currentUserId = this.state.user.uid;
         return userId < currentUserId ?
             `${userId}/${currentUserId}` : `${currentUserId}/${userId}`
-    }
+    };
 
     render() {
         const { users, activeChannel } = this.state;
