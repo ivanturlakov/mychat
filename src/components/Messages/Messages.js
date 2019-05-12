@@ -43,6 +43,18 @@ class Messages extends React.Component {
         this.state.connectedRef.off();
     };
 
+    removeListeners = listeners => {
+        listeners.forEach(listener => {
+            listener.ref.child(listener.id).off(listener.event);
+        })
+    };
+    
+    componentDidUpdate(prevProps, prevState) {
+        if(this.messagesEnd) {
+            this.scrollToBottom();
+        }
+    };    
+
     addToListeners = (id, ref, event) => {
         const index = this.state.listeners.findIndex(listener => {
             return listener.id === id && listener.ref === ref && listener.event === event;
@@ -51,18 +63,6 @@ class Messages extends React.Component {
         if(index === -1) {
             const newListener = { id, ref, event };
             this.setState({ listeners: this.state.listeners.concat(newListener) });
-        }
-    };
-
-    removeListeners = listeners => {
-        listeners.forEach(listener => {
-            listener.ref.child(listener.id).off(listener.event);
-        })
-    };
-
-    componentDidUpdate(prevProps, prevState) {
-        if(this.messagesEnd) {
-            this.scrollToBottom();
         }
     };
 
@@ -109,7 +109,7 @@ class Messages extends React.Component {
                         }
                     })
             }
-        })
+        });
     }
 
     addMessageListener = channelId => {
@@ -183,7 +183,7 @@ class Messages extends React.Component {
 
     handleSearchChange = event => {
         this.setState({
-            searchTerm: event.target.value,
+            searchTerm: event.target.value
         }, () => this.handleSearchMessages());
     };
 
